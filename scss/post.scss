@@ -357,6 +357,18 @@ body.loginbackgroundimage #page {
     }
 }
 
+/*-- Sticky Bearbeitenbutton -- FHGR*/
+#page-course-view-topics {
+    .flex-wrap > .ml-auto > .singlebutton > form > button.btn.btn-secondary {
+        position: fixed;
+        top: 47px;
+        right: 4px;
+        padding: 4px 5px 0px 5px;
+        z-index: 1;
+        background: rgba(255,255,255, .5);
+        color: #4b92a4;
+    }
+}
 
 /*------------------------------------
   Course header
@@ -746,6 +758,27 @@ blockquote::before {
 #page-footer {
     /* footer color -- FHGR */
     background: #4b92a4;
+
+    padding-bottom: 0px !important;
+    
+
+    .footer_social_block a {
+        background-color: #ac8a45;
+        border-color: #ac8a45;
+        border-radius: 0px;
+        margin-top: 4px;
+    }
+
+    .footer_social_block a.btn {
+        min-width: 44px;
+    }
+
+    .third_footer {
+        background-color: white;
+        padding: 10px;
+    }
+
+    /*--End FHGR--*/
 
     /* Increase padding. */
     padding-top: 30px !important;
