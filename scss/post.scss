@@ -46,6 +46,11 @@
   Login page
   -------------------------------------*/
 
+  /* Dropdown manuelles login -- FHGR */
+div#dropdownlogin.show {
+    display: contents;
+}
+
 body.loginbackgroundimage #page {
     background-size: cover;
     background-position: center top;
@@ -739,6 +744,9 @@ blockquote::before {
   -------------------------------------*/
 
 #page-footer {
+    /* footer color -- FHGR */
+    background: #4b92a4;
+
     /* Increase padding. */
     padding-top: 30px !important;
 
