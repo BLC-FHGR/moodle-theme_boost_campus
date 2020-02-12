@@ -629,24 +629,6 @@ blockquote::before {
         font-weight: normal;
     }
 }
-.coursebox {
-    .moreinfo {
-        float: left;
-        margin-left: 21px;
-        // Put the further information into a new line.
-        clear: left;
-    }
-    .enrolmenticons {
-        // Align the icons in one line with the information icon.
-        display: inline;
-        padding-left: 0.75rem;
-        // As these icons are just for information and not clickable, make the color gray.
-        color: $gray-light;
-    }
-    .moreinfo a + div.enrolmenticons {
-        border-left: 2px solid $gray-light;
-    }
-}
 
 
 /*------------------------------------
@@ -973,11 +955,8 @@ a[href^="mailto"]::before {
 #boost-campus-activity-settings {
     /* Initially do not display the settings. Visibility will be changed on click with incoursesettings.js. */
     display: none;
-    padding: 1rem;
-    padding-top: 0;
-    margin-bottom: 3rem;
-    margin-top: 1rem;
-    border: none;
+    margin-bottom: 1rem;
+    padding: 0 1rem 1.3rem 1rem;
 
     .nav-tabs {
         border: none;
@@ -991,6 +970,11 @@ a[href^="mailto"]::before {
         background-color: darken($body-bg, 5%);
         border: none;
     }
+}
+
+/* As this is already placed within the activity content card, the border around the settings card should be removed. */
+#boost-campus-activity-settings {
+    border: none;
 }
 
 /* Setting to move 'Switch role to...' menu item to the course settings - but only if
