@@ -51,6 +51,12 @@ div#dropdownlogin.show {
     display: contents;
 }
 
+/* Login logo for corporate design -- FHGR */
+#loginlogoheader.card-header {
+    background-color: #fff;
+    padding: 3rem;
+}
+
 body.loginbackgroundimage #page {
     background-size: cover;
     background-position: center top;
