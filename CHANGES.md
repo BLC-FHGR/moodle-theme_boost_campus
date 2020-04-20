@@ -4,6 +4,17 @@ moodle-theme_boost_campus
 Changes
 -------
 
+### Release v3.8-r1
+
+* 2020-03-24 - Changed setting imageareaitemslink to imageareaitemsattributes to be able to add alt text to the images.
+* 2020-03-10 - Fixed accessibility issues with in-course settings.
+* 2020-03-09 - Fixed accessibility issues with back-to-top button.
+* 2020-03-05 - Adjusted function full_header() in core_renderer.php due to upstream changes in theme Boost.
+* 2020-03-05 - Removed SCSS rule to wrap words in cards as it has been fixed in theme Boost.
+* 2020-03-05 - Adjusted login.mustache template due to upstream changes in theme Boost.
+* 2020-03-05 - Adjusted columns2.mustache template due to upstream changes in theme Boost.
+* 2020-03-05 - Prepare compatibility for Moodle 3.8.
+
 ### Release v3.7-r4
 
 * 2020-02-11 - Re-ordered in course course settings to be displayed within the course header.
