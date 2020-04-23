@@ -364,7 +364,7 @@ body.loginbackgroundimage #page {
 }
 
 /*-- Sticky Bearbeitenbutton -- FHGR*/
-#page-course-view-topics {
+[id^='page-course-view-'] {
     .flex-wrap > .ml-auto > .singlebutton > form > button.btn.btn-secondary {
         position: fixed;
         top: 47px;
