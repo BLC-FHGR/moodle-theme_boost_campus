@@ -1,7 +1,7 @@
 moodle-theme_boost_campus
 =========================
 
-[![Build Status](https://travis-ci.org/moodleuulm/moodle-theme_boost_campus.svg?branch=master)](https://travis-ci.org/moodleuulm/moodle-theme_boost_campus)
+[![Moodle Plugin CI](https://github.com/moodleuulm/moodle-theme_boost_campus/workflows/Moodle%20Plugin%20CI/badge.svg?branch=master)](https://github.com/moodleuulm/moodle-theme_boost_campus/actions?query=workflow%3A%22Moodle+Plugin+CI%22+branch%3Amaster)
 
 Moodle Boost child theme which is intended to meet the needs of university campuses and adds several features and improvements
 
@@ -9,7 +9,7 @@ Moodle Boost child theme which is intended to meet the needs of university campu
 Requirements
 ------------
 
-This plugin requires Moodle 3.8+
+This plugin requires Moodle 3.10+
 
 
 Motivation for this theme
@@ -65,11 +65,11 @@ This setting is already available in the Moodle core theme Boost. For more infor
 
 ##### Brand success color
 
-This color is used for example in regards to form valiations.
+This color is used for example in regards to form validations.
 
 ##### Brand info color
 
-This color is used for example for availabiity information of course activities or resources.
+This color is used for example for availability information of course activities or resources.
 
 ##### Brand warning color
 
@@ -77,7 +77,7 @@ This color is used for example for warning texts.
 
 ##### Brand danger color
 
-This color is used for example in regards to form valiations.
+This color is used for example in regards to form validations.
 
 #### Favicon
 
@@ -115,15 +115,26 @@ This setting will catch the "Ctrl + Arrow down" shortcut (Windows), prevent the 
 
 With this setting you can manage where the "Add a block" widget should be displayed. "At the bottom of the nav drawer" means the widget to add new blocks is displayed in the left sliding navigation panel like in theme Boost. "At the bottom of the default block region" means the widget to add new blocks will be displayed in the default block region.
 
+##### Boost Campus "Back to top" button
+
+Since Moodle 3.9, a "Go to top" button was integrated into theme Boost and usually that would make our provided solution obsolete.
+However, the core solution has still some little itches and that is the reason why we would like to provide the Boost Campus "Back to top" button as an optional setting.
+If you enable this setting, the core "Go to top" button will not be displayed and instead the Boost Campus "Back to top" button will occur. The differences are:
+
+* Smooth scolling: Boost Campus "Back to top" button uses smooth scrolling whilst the core "Go to top" button jumps directly to the top.
+* URL implications: Boost Campus "Back to top" button only uses Javascript and has no implication to the URL whilst the core "Go to top" button adds a "#" at the end of the URL by clicking the button. If you copy the URL the "#" will be copied along.
+* Styling: The styling of both buttons differ.
+* Accessibility: Boost Campus "Back to top" button is not improved in terms of accessibility whilst the core "Go to top" button is.
+
+Please note:
+
+This setting will be removed as soon a the core feature is improved so that no individual theme solution is needed anymore.';
+
 ### 3. Tab "Course Layout Settings"
 
 #### Section 0: Title
 
 This setting can change the behaviour Moodle displays the title for the first course section. Moodle does not display it as long as the default title for this section is set. As soon as a user changes the title, it will appear. With this setting (option is checked), you can achieve a consistent behaviour by always showing the title for section 0.
-
-#### Course edit button
-
-With this setting you can add an additional course edit on / off button to the course header for faster accessibility. This the same way as it was displayed before theme_boost.
 
 #### Course related hints
 
@@ -138,6 +149,10 @@ With this setting a hint will appear in the course header as long as the visibil
 ##### Show hint guest for access
 
 With this setting a hint will appear in the course header when a user is accessing it with the guest access feature. If the course provides an active self enrolment, a link to that page is also presented to the user.
+
+##### Show hint for self enrolment without enrolment key
+
+With this setting a hint will appear in the course header if the course is visible and an enrolment without enrolment key is currently possible.
 
 #### Course settings
 
@@ -201,6 +216,7 @@ By checking this setting the default homepage link (Dashboard or Site home) will
 ##### Nav drawer width on small screens
 
 By checking this setting you can enlarge the opened nav drawer menu to the full page width on small screens. This may be wanted because on small screens only very few of the main content area in the background is visible. And a full width menu might serve the users' expectations how menus are displayed on small screens.
+
 
 ### 6. Tab "Design Settings"
 
@@ -330,7 +346,7 @@ For this reason, with this setting you can decide that the help texts should be 
 ##### Change breakpoint
 
 In theme Boost, the right block column will break down even on devices with a width up to 1200 pixels (widescreen resolution of the iPad is 1024 pixels, for example).
-This is because the breakpoint is set to [media-breakpoint-down(lg)](https://getbootstrap.com/docs/4.0/layout/overview/#responsive-breakpoints").
+This is because the breakpoint is set to [media-breakpoint-down(lg)](https://getbootstrap.com/docs/4.5/layout/overview/#responsive-breakpoints").
 
 If you think there is enough space to show the content plus the blocks column side by side on a screen width of 992 pixels and up, then enable this setting. It will change the breakpoint to media-breakpoint-down(md). This will break the blocks column only on screens with widths of less than 992 pixels.
 
@@ -344,6 +360,83 @@ The advantage of uploading files to this file area is that those files can be de
 Use case and usage example:
 We're using the footer blocks setting and some of the blocks are displaying an image that was added to the HTML block. When a newly registered user logs in, he will be redirected to the policy page (user/policy.php). The footer blocks are displayed on this page layout and because the HTML block will only deliver its resources after the user is logged in and accepted the user policy, the delivering will be prevented and the redirect is saved to this resource. This leads to the behavior that after accepting the policy the resource was displayed and not the Dashbaord as intended.
 With this setting, the image (e.g. htmlblockimage.png) that should be displayed in the block could be added to this file area and added as a link with the url "/pluginfile.php/1/theme_boost_campus/additionalresources/0/htmlblockimage.png".
+
+
+### 7. Tab "Info Banner Settings"
+
+#### Perpetual information banner
+
+##### Enable perpetual info banner
+
+With this checkbox you can decide if the perpetual information banner should be shown or hidden on the selected pages.
+
+##### Perpetual information banner content (dependent on setting "Enable perpetual info banner")
+
+Enter your information which should be shown within the banner here.
+
+##### Page layouts to display the info banner on (dependent on setting "Enable perpetual info banner")
+
+With this setting you can select the pages on which the perpetual information banner should be displayed.
+
+##### Bootstrap css class for the perpetual info banner (dependent on setting "Enable perpetual info banner")
+
+With this setting you can select the Bootstrap style with which the perpetual information banner should be displayed.
+
+##### Perpetual info banner dismissible (dependent on setting "Enable perpetual info banner")
+
+With this checkbox you can make the banner dismissible permanently. If the user clicks on the x-button a confirmation dialogue will appear and only after the user confirmed this dialogue the banner will be hidden for this user permanently. 
+
+Please note:
+
+This setting has no effect for the banners shown on the login page. Because banners on the login page cannot be clicked away permanently, we do not offer the possibility to click the banner away at all on the login page.
+
+##### Confirmation dialogue (dependent on setting "Perpetual info banner dismissible")
+
+When you enable this setting you can show a confirmation dialogue to a user when he is dismissing the info banner. 
+
+The text is saved in the string with the name "closingperpetualinfobanner":
+```
+Are you sure you want to dismiss this information? Once done it will not occur again!
+```
+You can override this within your language customization if you need some other text in this dialogue.
+
+##### Reset visibility for perpetual info banner (dependent on setting "Perpetual info banner dismissible")
+
+By enabling this checkbox, the visibility of the individually dismissed perpetual info banners will be set to visible again. You can use this setting if you made important content changes and want to show the info to all users again.
+
+Please note: 
+After saving this option, the database operations for resetting the visibility will be triggered and this checkbox will be unticked again. The next enabling and saving of this feature will trigger the database operations for resetting the visibility again.
+
+#### Time controlled information banner
+
+##### Enable time controlled info banner
+
+With this checkbox you can decide if the time controlled information banner should be shown or hidden on the selected pages.
+
+##### Time controlled information banner content (dependent on setting "Enable time controlled info banner")
+
+Enter your information which should be shown within the time controlled banner here.
+
+##### Page layouts to display the info banner on (dependent on setting "Enable time controlled info banner")
+
+With this setting you can select the pages on which the time controlled information banner should be displayed. 
+If both info banners are active on a selected layout, the time controlled info banner will always appear above the perpetual info banner!
+
+##### Bootstrap css class for the time controlled info banner (dependent on setting "Enable time controlled info banner")
+
+With this setting you can select the Bootstrap style with which the time controlled information banner should be displayed.
+
+##### Start time for the time controlled info banner (dependent on setting "Enable time controlled info banner")
+
+With this setting you can define when the time controlled information banner should be displayed on the selected pages. 
+Please enter a valid in this format: YYYY-MM-DD HH:MM:SS. For example: "2020-01-01 08:00:00". The time zone will be the time zone you have defined in the setting "Default timezone". 
+If you leave this setting empty but entered a date in the for the end, it is the same as if you entered a date far in the past.
+
+##### End time for the time controlled info banner (dependent on setting "Enable time controlled info banner")
+
+With this setting you can define when the time controlled information banner should be hidden on the selected pages. 
+Please enter a valid date in this format: YYYY-MM-DD HH:MM:SS. For example: "2020-01-07 08:00:00. The time zone will be the time zone you have defined in the setting "Default timezone". 
+If you leave this setting empty but entered a date in the for the start, the banner won't hide after the starting time has been reached.
 
 
 Further improvements to Boost core theme
@@ -436,11 +529,13 @@ We are always interested to read about your feature proposals or even get a pull
 Moodle release support
 ----------------------
 
-Due to limited resources, this plugin is only maintained for the most recent major release of Moodle. However, previous versions of this plugin which work in legacy major releases of Moodle are still available as-is without any further updates in the Moodle Plugins repository.
+Due to limited resources, this plugin is only maintained for the most recent major release of Moodle as well as the most recent LTS release of Moodle. Bugfixes are backported to the LTS release. However, new features and improvements are not necessarily backported to the LTS release.
 
-There may be several weeks after a new major release of Moodle has been published until we can do a compatibility check and fix problems if necessary. If you encounter problems with a new major release of Moodle - or can confirm that this plugin still works with a new major relase - please let us know on Github.
+Apart from these maintained releases, previous versions of this plugin which work in legacy major releases of Moodle are still available as-is without any further updates in the Moodle Plugins repository.
 
-If you are running a legacy version of Moodle, but want or need to run the latest version of this plugin, you can get the latest version of the plugin, remove the line starting with $plugin->requires from version.php and use this latest plugin version then on your legacy Moodle. However, please note that you will run this setup completely at your own risk. We can't support this approach in any way and there is a undeniable risk for erratic behavior.
+There may be several weeks after a new major release of Moodle has been published until we can do a compatibility check and fix problems if necessary. If you encounter problems with a new major release of Moodle - or can confirm that this plugin still works with a new major release - please let us know on Github.
+
+If you are running a legacy version of Moodle, but want or need to run the latest version of this plugin, you can get the latest version of the plugin, remove the line starting with $plugin->requires from version.php and use this latest plugin version then on your legacy Moodle. However, please note that you will run this setup completely at your own risk. We can't support this approach in any way and there is an undeniable risk for erratic behavior.
 
 
 Translating this plugin

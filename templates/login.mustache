@@ -19,6 +19,15 @@
 
     Login page template
 
+    Context variables required for this template:
+    * pagebottomelements - HTML for all additional layout elements: the footnote.
+    * timedinfobannershowonselectedpage - true if the time controlled info banner should be displayed.
+    * timedetualinfobannercontent - The content that should be shown in the time controled information banner.
+    * timedetualinfobannercssclass - The Bootstrap class that is used for the time controlled info banner.
+    * perpinfobannershowonselectedpage - true if the info banner should be displayed.
+    * perpibcontent - The content that should be shown in the information banner.
+    * perpibcss - The Bootstrap class that is used for the info banner.
+
     Example context (json):
     {
         "output": {
@@ -26,12 +35,20 @@
             "page_title": "Login page",
             "favicon": "favicon.ico",
             "main_content": "<h1>Headers keep HTML validators happy</h1>"
-        }
-        * pagebottomelements - HTML for all additional layout elements: the footnote.
+        },
+        "timedinfobannershowonselectedpage": true,
+        "timedibcontent": "This is a test content for timed info banner.",
+        "timedibcss": "danger",
+        "perpinfobannershowonselectedpage": true,
+        "perpibcontent": "This is a test content for perpetual info banner.",
+        "perpibcss": "primary",
+        "perpibdismiss": true
     }
 }}
 {{! MODIFICATION:
     * Add own additional layout elements: the footnote.
+    * Added the possibility to show information banners.
+    * Added the login background image text elements.
 }}
 {{> theme_boost/head }}
 
@@ -41,6 +58,18 @@
 <div id="page-wrapper">
 
     {{{ output.standard_top_of_body_html }}}
+
+    {{#timedinfobannershowonselectedpage}}
+    <div id="themeboostcampustimedinfobanner" class="alert alert-{{{ timedibcss }}} m-3" role="alert">
+        {{{ timedibcontent }}}
+    </div>
+    {{/timedinfobannershowonselectedpage}}
+
+    {{#perpinfobannershowonselectedpage}}
+    <div id="themeboostcampusperpinfobanner" class="alert alert-{{{ perpibcss }}} m-3" role="alert">
+        {{{ perpibcontent }}}
+    </div>
+    {{/perpinfobannershowonselectedpage}}
 
     <div id="page" class="container-fluid mt-0">
         <div id="page-content" class="row">
@@ -53,7 +82,7 @@
             </div>
         </div>
         {{# loginbackgroundimagetext }}
-           <div class="row-fluid justify-content-end" id="loginbackgroundimagetext">
+           <div class="row justify-content-end" id="loginbackgroundimagetext">
                 <span class="m-3 px-3 py-2 d-none d-md-inline">
                     {{loginbackgroundimagetext}}
                 </span>
@@ -74,9 +103,8 @@
             {{{ output.standard_end_of_body_html }}}
         </div>
     </footer>
-    {{{ pagebottomelements }}}
+    {{> theme_boost_campus/footnote }}
 </div>
-
 
 </body>
 </html>

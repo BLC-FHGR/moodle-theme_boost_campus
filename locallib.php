@@ -181,6 +181,10 @@ function theme_boost_campus_get_imageareacontent() {
         // Get all files from filearea.
         $files = $fs->get_area_files($systemcontext->id, 'theme_boost_campus', 'imageareaitems', false, 'itemid', false);
 
+        // Initialize the array which holds the image links.
+        $links = [];
+        // Initialize the array which holds the alt texts.
+        $alttexts = [];
         // Only continue processing if there are files in the filearea.
         if (!empty($files)) {
             // Get the content from the setting imageareaitemsattributes and explode it to an array by the delimiter "new line".
@@ -199,7 +203,7 @@ function theme_boost_campus_get_imageareacontent() {
                 } else {
                     $settings = explode("|", $line);
                     // Check if parameter 2 or 3 is set.
-                    if (!empty($settings[1] || !empty($settings[2]))) {
+                    if (!empty($settings[1]) || !empty($settings[2])) {
                         foreach ($settings as $i => $setting) {
                             $setting = trim($setting);
                             if (!empty($setting)) {
@@ -243,7 +247,7 @@ function theme_boost_campus_get_imageareacontent() {
                 } else {
                     $alttext = "";
                 }
-                // Add the file
+                // Add the file.
                 $imageareacache[] = array('filepath' => $filepath, 'linkpath' => $linkpath, 'alttext' => $alttext);
             }
             // Sort array alphabetically ascending to the key "filepath".
@@ -254,7 +258,8 @@ function theme_boost_campus_get_imageareacontent() {
             $themeboostcampuscache->set('imageareadata', $imageareacache);
             return $imageareacache;
         } else { // If no images are uploaded, then cache an empty array.
-            return $themeboostcampuscache->set('imageareadata', array());
+            $themeboostcampuscache->set('imageareadata', array());
+            return array();
         }
     }
 }
@@ -447,4 +452,83 @@ function theme_boost_campus_get_course_guest_access_hint($courseid) {
     }
 
     return $html;
+}
+
+/**
+ * Return if the info banner should be displayed on current page layout.
+ *
+ * @param array $infobannerpagestoshow The list of page layouts on which the info banner should be shown.
+ * @param string $infobannercontent The content which should be displayed within the info banner.
+ * @param mixed|moodle_page $thispagelayout The current page layout.
+ * @param string $perbibuserprefdialdismissed The user preference if the dissmissible banner has been dismissed.
+ * @return boolean
+ */
+function theme_boost_campus_show_banner_on_selected_page($infobannerpagestoshow, $infobannercontent, $thispagelayout,
+        $perbibuserprefdialdismissed) {
+
+    // Initialize variable.
+    $infobannershowonselectedpage = false;
+
+    // Traverse multiselect setting.
+    foreach ($infobannerpagestoshow as $page) {
+        if (empty($infobannercontent)) {
+            $infobannershowonselectedpage = false;
+        } else {
+            // Decide if the info banner should be shown at all.
+            if (!empty($infobannercontent) && $thispagelayout == $page && !$perbibuserprefdialdismissed) {
+                $infobannershowonselectedpage = true;
+                continue;
+            }
+        }
+    }
+    return $infobannershowonselectedpage;
+}
+
+/**
+ * Return if the time limited info banner should be displayed on current page layout.
+ *
+ * @param int $now The timestamp of the current server time.
+ * @param array $timedibshowonpages The list of page layouts on which the info banner should be shown.
+ * @param string $timedibcontent The content which should be displayed within the info banner.
+ * @param string $timedibstartsetting The value from setting timedibstart.
+ * @param string $timedibendsetting The value from setting timedibend.
+ * @param mixed|moodle_page $thispagelayout The current page layout.
+ * @return boolean
+ */
+function theme_boost_campus_show_timed_banner_on_selected_page($now, $timedibshowonpages, $timedibcontent, $timedibstartsetting,
+        $timedibendsetting, $thispagelayout) {
+
+    // Initialize variable.
+    $timedinfobannershowonselectedpage = false;
+
+    // Check if time settings are empty and try to convert the time string_s_ to a unix timestamp.
+    if (empty($timedibstartsetting)) {
+        $timedibstartempty = true;
+        $timedibstart = 0;
+    } else {
+        $timedibstart = strtotime($timedibstartsetting);
+        $timedibstartempty = false;
+    }
+    if (empty($timedibendsetting)) {
+        $timedibendempty = true;
+        $timedibend = 0;
+    } else {
+        $timedibend = strtotime($timedibendsetting);
+        $timedibendempty = false;
+    }
+
+    // Add the time check:
+    // Show the banner when now is between start and end time OR
+    // Show the banner when start is not set but end is not reached yet OR
+    // Show the banner when end is not set, but start lies in the past OR
+    // Show the banner if no dates are set, so there's no time restriction.
+    if (($now >= $timedibstart && $now <= $timedibend ||
+            ($now <= $timedibend && $timedibstartempty) ||
+            ($now >= $timedibstart && $timedibendempty) ||
+            ($timedibstartempty && $timedibendempty))) {
+        $timedinfobannershowonselectedpage = theme_boost_campus_show_banner_on_selected_page($timedibshowonpages,
+                $timedibcontent, $thispagelayout, false);
+    }
+
+    return $timedinfobannershowonselectedpage;
 }

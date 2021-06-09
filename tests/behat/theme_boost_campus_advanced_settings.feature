@@ -16,16 +16,6 @@ Feature: Configuring the theme_boost_campus plugin for the "Advanced settings" t
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
-    # There is a nasty bug with Behat-testing this theme that the footer is not displayed until the settings
-    # of the theme are stored manually. It seems not to be sufficient to just rely on the default settings being
-    # stored during the installation of the theme. Until we find the root of this bug, we circumvent it by setting the
-    # brand color manually and within this process making sure that all settings are really stored to the database.
-    And I log in as "admin"
-    And I navigate to "Appearance > Boost Campus" in site administration
-    And I click on "General settings" "link"
-    And I set the field "id_s_theme_boost_campus_brandcolor" to "#7a99ac"
-    And I press "Save changes"
-    And I log out
 
   # This is derivated from theme Boost and should be covered there with tests
   # Scenario: Add "Raw initial SCSS"
@@ -61,3 +51,27 @@ Feature: Configuring the theme_boost_campus plugin for the "Advanced settings" t
     And I am on "Course 1" course homepage with editing mode on
     Then I should see "Add a block" in the "#nav-drawer" "css_element"
     And "#block-region-side-pre" "css_element" should not exist
+
+  @javascript
+  Scenario: Enable "Boost Campus "Back to top" button"
+    Given the following config values are set as admin:
+      | config      | value | plugin             |
+      | bcbttbutton | 1     | theme_boost_campus |
+    When I log in as "admin"
+    And I navigate to "Development > Purge caches" in site administration
+    And I press "Purge all caches"
+    Then "#back-to-top" "css_element" should exist
+    And "#page-footer" "css_element" should appear before "#back-to-top" "css_element"
+    And "#goto-top-link" "css_element" should not exist
+
+  @javascript
+  Scenario: Counter check: Disable "Boost Campus "Back to top" button"
+    Given the following config values are set as admin:
+      | config      | value | plugin             |
+      | bcbttbutton | 0     | theme_boost_campus |
+    When I log in as "admin"
+    And I navigate to "Development > Purge caches" in site administration
+    And I press "Purge all caches"
+    Then "#goto-top-link" "css_element" should exist
+    And "#goto-top-link" "css_element" should appear before "#page-footer" "css_element"
+    And "#back-to-top" "css_element" should not exist

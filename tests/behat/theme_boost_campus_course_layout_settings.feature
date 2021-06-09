@@ -16,16 +16,6 @@ Feature: Configuring the theme_boost_campus plugin for the "Course Layout settin
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
-    # There is a nasty bug with Behat-testing this theme that the footer is not displayed until the settings
-    # of the theme are stored manually. It seems not to be sufficient to just rely on the default settings being
-    # stored during the installation of the theme. Until we find the root of this bug, we circumvent it by setting the
-    # brand color manually and within this process making sure that all settings are really stored to the database.
-    And I log in as "admin"
-    And I navigate to "Appearance > Boost Campus" in site administration
-    And I click on "General settings" "link"
-    And I set the field "id_s_theme_boost_campus_brandcolor" to "#7a99ac"
-    And I press "Save changes"
-    And I log out
 
   Scenario: Enable "Section 0: Title"
     Given the following config values are set as admin:
@@ -46,22 +36,11 @@ Feature: Configuring the theme_boost_campus plugin for the "Course Layout settin
       | section0title | no     | theme_boost_campus |
     When I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    Then I should not see "General" in the "li#section-0" "css_element"
+    Then "#section-0 h3.sectionname.accesshide" "css_element" should exist
     When I edit the section "0" and I fill the form with:
       | Custom                     | 1                           |
       | New value for Section name | This is the general section |
     Then I should see "This is the general section" in the "li#section-0" "css_element"
-
-  Scenario: Enable "Course edit button"
-    Given the following config values are set as admin:
-      | config           | value | plugin             |
-      | courseeditbutton | 1     | theme_boost_campus |
-    When I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    Then I should see "Turn editing on" in the "#page-header .singlebutton" "css_element"
-    When I click on "Turn editing on" "button"
-    Then I should see "Turn editing off" in the "#page-header .singlebutton" "css_element"
-    And I should see "Add an activity or resource"
 
   Scenario: Enable "Position of switch role information"
     Given the following config values are set as admin:
@@ -140,6 +119,285 @@ Feature: Configuring the theme_boost_campus plugin for the "Course Layout settin
     Then I should not see "You are currently viewing this course as Guest."
     And ".course-guestaccess-infobox" "css_element" should not exist
 
+  Scenario: Enable "Show hint for self enrolment without enrolment key"
+    Given the following config values are set as admin:
+      | config                  | value | plugin             |
+      | showhintcourseselfenrol | yes   | theme_boost_campus |
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+    And I navigate to "Users > Enrolment methods" in current page administration
+    When I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should exist
+    And I log out
+    When I log in as "student1"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+
+  Scenario: Enable "Show hint for self enrolment without enrolment key" and check that the call for action is shown
+    Given the following config values are set as admin:
+      | config                  | value | plugin             |
+      | showhintcourseselfenrol | yes   | theme_boost_campus |
+    And the following "users" exist:
+      | username |
+      | teacher2 |
+    And the following "course enrolments" exist:
+      | user     | course | role    |
+      | teacher2 | C1     | teacher |
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And I should not see "If you don't want that any Moodle user can enrol into this course freely, please restrict the self enrolment settings."
+    And ".course-selfenrol-infobox" "css_element" should not exist
+    And I navigate to "Users > Enrolment methods" in current page administration
+    When I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is"
+    And I should see "If you don't want that any Moodle user can enrol into this course freely, please restrict the self enrolment settings."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    And I log out
+    When I log in as "teacher2"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is"
+    And I should not see "If you don't want that any Moodle user can enrol into this course freely, please restrict the self enrolment settings."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    And I log out
+    When I log in as "student1"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And I should not see "If you don't want that any Moodle user can enrol into this course freely, please restrict the self enrolment settings."
+    And ".course-selfenrol-infobox" "css_element" should not exist
+
+  Scenario: Enable "Show hint for self enrolment without enrolment key" and check that it is hidden when new enrolments are disabled
+    Given the following config values are set as admin:
+      | config                  | value | plugin             |
+      | showhintcourseselfenrol | yes   | theme_boost_campus |
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+    And I navigate to "Users > Enrolment methods" in current page administration
+    When I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I click on "Self enrolment (Student)" "link" in the ".course-selfenrol-infobox" "css_element"
+    And I set the following fields to these values:
+      | Allow new enrolments | 0 |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+
+  Scenario: Enable "Show hint for self enrolment without enrolment key" and check that it is hidden when a password is set
+    Given the following config values are set as admin:
+      | config                  | value | plugin             |
+      | showhintcourseselfenrol | yes   | theme_boost_campus |
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+    And I navigate to "Users > Enrolment methods" in current page administration
+    When I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I click on "Self enrolment (Student)" "link" in the ".course-selfenrol-infobox" "css_element"
+    And I set the following fields to these values:
+      | Enrolment key | 1234 |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+
+  Scenario: Enable "Show hint for self enrolment without enrolment key" and check the hints depending on the configured start and / or end dates
+    Given the following config values are set as admin:
+      | config                  | value | plugin             |
+      | showhintcourseselfenrol | yes   | theme_boost_campus |
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+    And I navigate to "Users > Enrolment methods" in current page administration
+    When I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is currently possible."
+    And I should see "The Self enrolment (Student) enrolment instance allows unrestricted self enrolment infinitely."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I click on "Self enrolment (Student)" "link" in the ".course-selfenrol-infobox" "css_element"
+    And I set the following fields to these values:
+      | id_enrolstartdate_enabled | 0             |
+      | id_enrolenddate_enabled   | 1             |
+    # We can't use the ##yesterday## notation here.
+      | id_enrolenddate_day       | 1             |
+      | id_enrolenddate_month     | January       |
+      | id_enrolenddate_year      | 2019          |
+      | id_enrolenddate_hour      | 00            |
+      | id_enrolenddate_minute    | 00            |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+    When I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Edit" "link" in the "Self enrolment (Student)" "table_row"
+    And I set the following fields to these values:
+      | id_enrolstartdate_enabled | 0             |
+      | id_enrolenddate_enabled   | 1             |
+    # We can't use the ##tomorrow## notation here. This test will break in the year 2050.
+      | id_enrolenddate_day       | 1             |
+      | id_enrolenddate_month     | January       |
+      | id_enrolenddate_year      | 2050          |
+      | id_enrolenddate_hour      | 00            |
+      | id_enrolenddate_minute    | 00            |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is currently possible."
+    And I should see "The Self enrolment (Student) enrolment instance allows unrestricted self enrolment until Saturday, 1 January 2050, 12:00 AM."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Edit" "link" in the "Self enrolment (Student)" "table_row"
+    And I set the following fields to these values:
+      | id_enrolstartdate_enabled | 1             |
+    # We can't use the ##yesterday## notation here.
+      | id_enrolstartdate_day     | 1             |
+      | id_enrolstartdate_month   | January       |
+      | id_enrolstartdate_year    | 2019          |
+      | id_enrolstartdate_hour    | 00            |
+      | id_enrolstartdate_minute  | 00            |
+      | id_enrolenddate_enabled   | 0             |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is currently possible."
+    And I should see "The Self enrolment (Student) enrolment instance allows unrestricted self enrolment currently."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Edit" "link" in the "Self enrolment (Student)" "table_row"
+    And I set the following fields to these values:
+      | id_enrolstartdate_enabled | 1             |
+    # We can't use the ##tomorrow## notation here. This test will break in the year 2050.
+      | id_enrolstartdate_day     | 1             |
+      | id_enrolstartdate_month   | January       |
+      | id_enrolstartdate_year    | 2050          |
+      | id_enrolstartdate_hour    | 00            |
+      | id_enrolstartdate_minute  | 00            |
+      | id_enrolenddate_enabled   | 0             |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is planned to become possible."
+    And I should see "The Self enrolment (Student) enrolment instance allows unrestricted self enrolment from Saturday, 1 January 2050, 12:00 AM on."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Edit" "link" in the "Self enrolment (Student)" "table_row"
+    And I set the following fields to these values:
+      | id_enrolstartdate_enabled | 1             |
+    # We can't use the ##Monday next week## notation here. This test will break in the year 2050.
+      | id_enrolstartdate_day     | 1             |
+      | id_enrolstartdate_month   | January       |
+      | id_enrolstartdate_year    | 2050          |
+      | id_enrolstartdate_hour    | 00            |
+      | id_enrolstartdate_minute  | 00            |
+      | id_enrolenddate_enabled   | 1             |
+    # We can't use the ##Tuesday next week## notation here. This test will break in the year 2050.
+      | id_enrolenddate_day       | 2             |
+      | id_enrolenddate_month     | January       |
+      | id_enrolenddate_year      | 2050          |
+      | id_enrolenddate_hour      | 00            |
+      | id_enrolenddate_minute    | 00            |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is planned to become possible."
+    And I should see "The Self enrolment (Student) enrolment instance allows unrestricted self enrolment from Saturday, 1 January 2050, 12:00 AM until Sunday, 2 January 2050, 12:00 AM."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Edit" "link" in the "Self enrolment (Student)" "table_row"
+    And I set the following fields to these values:
+      | id_enrolstartdate_enabled | 1             |
+    # We can't use the ##yesterday## notation here.
+      | id_enrolstartdate_day     | 1             |
+      | id_enrolstartdate_month   | January       |
+      | id_enrolstartdate_year    | 2019          |
+      | id_enrolstartdate_hour    | 00            |
+      | id_enrolstartdate_minute  | 00            |
+      | id_enrolenddate_enabled   | 1             |
+    # We can't use the ##tomorrow## notation here. This test will break in the year 2050.
+      | id_enrolenddate_day       | 1             |
+      | id_enrolenddate_month     | January       |
+      | id_enrolenddate_year      | 2050          |
+      | id_enrolenddate_hour      | 00            |
+      | id_enrolenddate_minute    | 00            |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is currently possible."
+    And I should see "The Self enrolment (Student) enrolment instance allows unrestricted self enrolment until Saturday, 1 January 2050, 12:00 AM."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Edit" "link" in the "Self enrolment (Student)" "table_row"
+    And I set the following fields to these values:
+      | id_enrolstartdate_enabled | 1             |
+    # We can't use the ##3 days ago## notation here.
+      | id_enrolstartdate_day     | 1             |
+      | id_enrolstartdate_month   | January       |
+      | id_enrolstartdate_year    | 2018          |
+      | id_enrolstartdate_hour    | 00            |
+      | id_enrolstartdate_minute  | 00            |
+      | id_enrolenddate_enabled   | 1             |
+    # We can't use the ##2 days ago## notation here.
+      | id_enrolenddate_day       | 1             |
+      | id_enrolenddate_month     | January       |
+      | id_enrolenddate_year      | 2019          |
+      | id_enrolenddate_hour      | 00            |
+      | id_enrolenddate_minute    | 00            |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+
+  Scenario: Enable "Show hint for self enrolment without enrolment key" and add more than one self enrolment instance
+    Given the following config values are set as admin:
+      | config                  | value | plugin             |
+      | showhintcourseselfenrol | yes   | theme_boost_campus |
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    Then I should not see "This course is currently visible and self enrolment without enrolment key is"
+    And ".course-selfenrol-infobox" "css_element" should not exist
+    And I navigate to "Users > Enrolment methods" in current page administration
+    When I click on "Enable" "link" in the "Self enrolment (Student)" "table_row"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is"
+    And I should see "The Self enrolment (Student) enrolment instance allows unrestricted self enrolment infinitely."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I add "Self enrolment" enrolment method with:
+      | Custom instance name | Custom self enrolment |
+    And I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Edit" "link" in the "Custom self enrolment" "table_row"
+    And I set the following fields to these values:
+      | id_enrolstartdate_enabled | 0             |
+      | id_enrolenddate_enabled   | 1             |
+    # We can't use the ##tomorrow## notation here. This test will break in the year 2050.
+      | id_enrolenddate_day       | 1             |
+      | id_enrolenddate_month     | January       |
+      | id_enrolenddate_year      | 2050          |
+      | id_enrolenddate_hour      | 00            |
+      | id_enrolenddate_minute    | 00            |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is currently possible."
+    And I should see "The Self enrolment (Student) enrolment instance allows unrestricted self enrolment infinitely. The Custom self enrolment enrolment instance allows unrestricted self enrolment until Saturday, 1 January 2050, 12:00 AM."
+    And ".course-selfenrol-infobox" "css_element" should exist
+    When I navigate to "Users > Enrolment methods" in current page administration
+    And I click on "Edit" "link" in the "Self enrolment (Student)" "table_row"
+    And I set the following fields to these values:
+      | Enrolment key | 1234 |
+    And I press "Save changes"
+    And I am on "Course 1" course homepage
+    Then I should see "This course is currently visible and self enrolment without enrolment key is currently possible."
+    And I should see "The Custom self enrolment enrolment instance allows unrestricted self enrolment until Saturday, 1 January 2050, 12:00 AM."
+    And ".course-selfenrol-infobox" "css_element" should exist
+
   @javascript
   Scenario: Enable "In course settings menu"
     Given the following config values are set as admin:
@@ -153,19 +411,19 @@ Feature: Configuring the theme_boost_campus plugin for the "Course Layout settin
     And I should see "Course administration" in the "#boost-campus-course-settings" "css_element"
     And I should see "Backup" in the "#course-settings-courseadmin" "css_element"
     And I should see "Users" in the "#boost-campus-course-settings" "css_element"
-    When I click on "Users" "link"
+    When I click on "Users" "link" in the "#boost-campus-course-settings" "css_element"
     Then "#course-settings-users" "css_element" should be visible
     And I should see "Enrolment methods" in the "#course-settings-users" "css_element"
     And I should see "Reports" in the "#boost-campus-course-settings" "css_element"
-    When I click on "Reports" "link"
+    When I click on "Reports" "link" in the "#boost-campus-course-settings" "css_element"
     Then "#course-settings-coursereports" "css_element" should be visible
     And I should see "Activity report" in the "#course-settings-coursereports" "css_element"
     And I should see "Badges" in the "#boost-campus-course-settings" "css_element"
-    When I click on "Badges" "link"
+    When I click on "Badges" "link" in the "#boost-campus-course-settings" "css_element"
     Then "#course-settings-coursebadges" "css_element" should be visible
     And I should see "Manage badges" in the "#course-settings-coursebadges" "css_element"
     And I should see "Question bank" in the "#boost-campus-course-settings" "css_element"
-    When I click on "Question bank" "link"
+    When I click on "Question bank" "link" in the "#boost-campus-course-settings" "css_element"
     Then "#course-settings-questionbank" "css_element" should be visible
     And I should see "Questions" in the "#course-settings-questionbank" "css_element"
 
