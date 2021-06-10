@@ -36,7 +36,7 @@
 {{! MODIFICATION:
     * Add footer blocks.
 }}
-<footer id="page-footer" class="py-3 bg-dark text-light">
+<footer id="page-footer" class="py-3 text-light">
     <div class="container-fluid">
         <div class="row-fluid">
             <div id="course-footer" class="col-12">
@@ -89,8 +89,9 @@
 
     {{! Add standard Moodle footer behind the blocks area. }}
     <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="col-12">
+        <div class="row-fluid px-5">
+            <div class="col-6 first_footer">
+                <h5>Über Moodle</h5>
                 {{# output.page_doc_link }}
                     <p class="helplink">{{{ output.page_doc_link }}}</p>
                 {{/ output.page_doc_link }}
@@ -98,6 +99,7 @@
                 {{{ output.login_info }}}
                 <div class="tool_usertours-resettourcontainer"></div>
                 {{{ output.home_link }}}
+                <p><a href="https://www.fhgr.ch/datenschutzverordnung/">Datenschutzverordnung</a></p>
                 <nav class="nav navbar-nav d-md-none" aria-label="{{#str}}custommenu, admin{{/str}}">
                     {{# output.custom_menu_flat }}
                         <ul class="list-unstyled pt-3">
@@ -105,8 +107,43 @@
                         </ul>
                     {{/ output.custom_menu_flat }}
                 </nav>
-                {{{ output.standard_footer_html }}}
+                <!-- {{{ output.standard_footer_html }}} -->
                 {{{ output.standard_end_of_body_html }}}
+            </div>
+            <div class="col-md-6 second_footer">
+              <!-- fhgr -->
+                <div class="footer_box" id="">
+
+                  <h5 class="">Über die Fachhochschule Graubünden</h5>
+                  <p class="bodytext"> Die <a href="http://www.fhgr.ch/ueber-uns/organisation/zahlen-und-fakten-organigramm.html" target="_blank" title="Opens internal link in current window" class="internal-link">Fachhochschule Graubünden</a> bietet Bachelor- und Masterangebote, Weiterbildungen sowie angewandte Forschung und Dienstleistungen.</p>
+                  <div id="footer_social">
+                    <div class="footer_social_block">
+                      <a href="https://instagram.com/fachhochschule.graubuenden" target="_blank" class="btn btn-primary ripple"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                      <a href="https://www.facebook.com/fachhochschule.graubuenden" target="_blank" class="btn btn-primary ripple"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                      <a href="https://www.twitter.com/fh_graubuenden" target="_blank" class="btn btn-primary ripple"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                      <a href="https://www.youtube.com/htwchur1000" target="_blank" class="btn btn-primary ripple"><i class="fa fa-youtube" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="footer_social_block">
+                      <a href="https://www.snapchat.com/add/fachhochschule.graubuenden" target="_blank" class="btn btn-primary ripple"><i class="fa fa-snapchat-ghost" aria-hidden="true"></i></a>
+                      <a href="https://www.flickr.com/htwchur" target="_blank" class="btn btn-primary"><i class="fa fa-flickr" aria-hidden="true"></i></a>
+                      <a href="https://www.xing.com/companies/hochschulef%2525C3%25259Crtechnikundwirtschafthtwchur" target="_blank" class="btn btn-primary"><i class="fa fa-xing" aria-hidden="true"></i></a>
+                      <a href="https://www.linkedin.com/edu/school?id=372031" target="_blank" class="btn btn-primary"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                    </div>
+                    <br>
+                  </div>
+
+                  </div>
+              <!-- fhgr end -->
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row-fluid third_footer">
+            <div class="col-6 text-center">
+                <a href="http://www.swissuniversities.ch" target="_blank"><img src="/fhgr/pix/swissuni.png"></a>
+            </div>
+            <div class="col-6 text-center">
+                <a href="http://www.graubuenden.ch" target="_blank"><img src="/fhgr/pix/graubuenden_2013_de.png"></a>
             </div>
         </div>
     </div>
